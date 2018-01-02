@@ -1,4 +1,4 @@
-package com.shirotest;
+package com.shirotest.chapter1;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -24,7 +24,7 @@ public class TestShiro {
         SecurityUtils.setSecurityManager(securityManager);
 //        得到 Subject 及创建用户名/密码身份验证 Token(即用户身份/凭证)
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken("zhang","123");
+        UsernamePasswordToken token = new UsernamePasswordToken("zhang1","123");
 //        登录,即身份验证
         try{
 //        身份验证失败

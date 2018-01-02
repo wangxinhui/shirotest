@@ -1,4 +1,4 @@
-package com.shirotest;
+package com.shirotest.chapter1;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.Realm;
