@@ -1,12 +1,12 @@
-package com.shirotest.chapter1;
+package com.shirotest.chapter1.realm;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.Realm;
 
-public class MyRealm implements Realm{
+public class MyRealm1 implements Realm{
     @Override
     public String getName() {
-        return "MyRealm";
+        return "MyRealm1";
     }
 
     @Override
@@ -18,7 +18,7 @@ public class MyRealm implements Realm{
     public AuthenticationInfo getAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String username = (String) authenticationToken.getPrincipal();
         String password = new String((char[])authenticationToken.getCredentials());
-        if (!"zhang".equals(username)){
+        if (!"wang".equals(username)){
             throw new UnknownAccountException();
         }
         if(!"123".equals(password)){
