@@ -39,4 +39,16 @@ public class TestShiro {
         subject.logout();
 
     }
+
+    @Test
+    public void test1() throws Exception {
+        String [] a = {"a","a"};
+        for (boolean s = false;a.length<3;s=true){
+            if (s){
+                throw new Exception("more than one");
+            }
+            System.out.println(a[0]);
+
+        }
+    }
 }
