@@ -4,11 +4,13 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.security.PermissionCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,6 +32,7 @@ public class ShiroRoleTest {
     public void roleTest1(){
         login("classpath:chapter3/shiro-role.ini","zhang","123");
         Subject subject = SecurityUtils.getSubject();
+        //判断拥有角色：role1
         subject.checkRole("role3");
 
     }
@@ -42,9 +45,23 @@ public class ShiroRoleTest {
         Assert.assertTrue(subject.isPermitted("user:update"));
         //判断用户权限
         Assert.assertTrue(subject.isPermittedAll("user:update","user:create"));
-
-
     }
+
+    @Test
+    public void roleTest3(){
+        login("classpath:chapter3/shiro-jdbc-authorizer.ini","zhang","123");
+        Subject subject = SecurityUtils.getSubject();
+//        Assert.assertTrue(subject.hasRole("role1"));
+
+        Assert.assertTrue(subject.isPermitted("menu:10"));
+
+        //判断用户权限
+//        Assert.assertTrue(subject.isPermitted("+user+1"));
+        //判断用户权限
+//        Assert.assertTrue(subject.isPermittedAll("user:update","user:create"));
+    }
+
+
 
 
     private void login(String configFile,String username,String password){
