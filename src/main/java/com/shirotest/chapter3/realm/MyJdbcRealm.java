@@ -1,7 +1,9 @@
 package com.shirotest.chapter3.realm;
 
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.config.ConfigurationException;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -13,6 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class MyJdbcRealm extends AuthorizingRealm{
     protected DataSource dataSource;
@@ -23,7 +29,7 @@ public class MyJdbcRealm extends AuthorizingRealm{
     protected MyJdbcRealm.SaltStyle saltStyle;
 
     public MyJdbcRealm(){
-        this.saltStyle = MyJdbcRealm.SaltStyle.NO_SALT;
+        this.saltStyle = SaltStyle.NO_SALT;
     }
 
     public void setDataSource(DataSource dataSource) {
@@ -56,10 +62,89 @@ public class MyJdbcRealm extends AuthorizingRealm{
     //    表示根据用户身份获取授权信息
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        if (principalCollection == null){
+            throw new AuthorizationException("PrincipalCollection method argument cannot be null.");
+        }
+        String username = (String) this.getAvailablePrincipal(principalCollection);
+        Connection conn = null;
+        Set<String> roleNames = null;
+        Set permissions = null;
 
-        return null;
+        try {
+            conn = dataSource.getConnection();
+            roleNames = getRoleByUser(conn,username);
+            if (this.permissionsLookupEnabled){
+                permissions = getPermissions(conn,username,roleNames);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roleNames);
+        if (permissions!=null){
+            info.setStringPermissions(permissions);
+        }
+        return info;
     }
-//    示获取身份验证信息
+
+    private Set<String> getRoleByUser(Connection conn, String username) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        LinkedHashSet roleNames = new LinkedHashSet();
+
+        try {
+            ps = conn.prepareStatement(this.userRolesQuery);
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                String roleName = rs.getString(1);
+                if (roleName != null) {
+                    roleNames.add(roleName);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtils.closeResultSet(rs);
+            JdbcUtils.closeStatement(ps);
+        }
+
+        return roleNames;
+    }
+
+    protected Set<String> getPermissions(Connection conn, String username, Collection<String> roleNames) throws SQLException {
+        PreparedStatement ps = null;
+        LinkedHashSet permissions = new LinkedHashSet();
+
+        try {
+            ps = conn.prepareStatement(this.permissionsQuery);
+            Iterator i$ = roleNames.iterator();
+
+            while(i$.hasNext()) {
+                String roleName = (String)i$.next();
+                ps.setString(1, roleName);
+                ResultSet rs = null;
+
+                try {
+                    rs = ps.executeQuery();
+
+                    while(rs.next()) {
+                        String permissionString = rs.getString(1);
+                        permissions.add(permissionString);
+                    }
+                } finally {
+                    JdbcUtils.closeResultSet(rs);
+                }
+            }
+        } finally {
+            JdbcUtils.closeStatement(ps);
+        }
+
+        return permissions;
+    }
+
+    //    示获取身份验证信息
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
@@ -78,6 +163,7 @@ public class MyJdbcRealm extends AuthorizingRealm{
                     switch(this.saltStyle){
                         case NO_SALT:
                             password = this.getPasswordByUser(conn,username)[0];
+                            break;
                         case CRYPT:
                             throw new ConfigurationException("Not implemented yet");
                         case COLUMN:

@@ -49,7 +49,7 @@ public class ShiroRoleTest {
 
     @Test
     public void roleTest3(){
-        login("classpath:chapter3/shiro-jdbc-authorizer.ini","zhang","123");
+        login("classpath:chapter3/shiro-jdbc-test.ini","zhang","123");
         Subject subject = SecurityUtils.getSubject();
 //        Assert.assertTrue(subject.hasRole("role1"));
 
