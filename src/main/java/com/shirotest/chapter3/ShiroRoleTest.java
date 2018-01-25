@@ -63,7 +63,6 @@ public class ShiroRoleTest {
 
 
 
-
     private void login(String configFile,String username,String password){
         Factory<SecurityManager> factory = new IniSecurityManagerFactory(configFile);
         SecurityManager securityManager = factory.getInstance();
