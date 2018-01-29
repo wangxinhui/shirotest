@@ -1,0 +1,7 @@
+1 定义service dao
+基本的加添 删除
+PermissionService add del
+? ? 添加角色-权限  删除角色-权限
+RoleService add del correlationPermission uncorrelationPermission
+UserService add changePassword correlationRoles uncorelationRoles findByUser   Set findRoles  Set findPermission
+
