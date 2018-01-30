@@ -68,7 +68,7 @@ public class Permission implements Serializable {
 
     @Override
     public String toString() {
-        return "Role{" +
+        return "RoleService{" +
                 "id=" + id +
                 ", permission='" + permission + '\'' +
                 ", description='" + description + '\'' +
