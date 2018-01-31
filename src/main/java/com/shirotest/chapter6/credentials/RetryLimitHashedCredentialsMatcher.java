@@ -8,6 +8,10 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,8 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher{
     private Ehcache passwordRetryCache;
 
-    public RetryLimitHashedCredentialsMatcher(Ehcache passwordRetryCache) {
-        CacheManager cacheManager = CacheManager.newInstance(CacheManager.class.getClassLoader().getResource("ehcache.xml"));
+    public RetryLimitHashedCredentialsMatcher() throws FileNotFoundException {
+        CacheManager cacheManager = CacheManager.newInstance(this.getClass().getClassLoader().getResourceAsStream("chapter6/ehcache.xml"));
         passwordRetryCache = cacheManager.getCache("passwordRetryCache");
     }
 
