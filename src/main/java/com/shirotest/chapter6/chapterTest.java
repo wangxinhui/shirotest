@@ -33,4 +33,10 @@ public class chapterTest extends BaseTest {
         Assert.assertTrue(subject().hasRole("admin"));
     }
 
+    @Test
+    public void testHasPermission() {
+        login("classpath:chapter6/shiro.ini", u1.getUsername(), password);
+        Assert.assertTrue(subject().isPermittedAll("user:create", "menu:create"));
+    }
+
 }

@@ -51,9 +51,9 @@ public class ShiroRoleTest {
     public void roleTest3(){
         login("classpath:chapter3/shiro-jdbc-test.ini","zhang","123");
         Subject subject = SecurityUtils.getSubject();
-//        Assert.assertTrue(subject.hasRole("role1"));
+        Assert.assertTrue(subject.hasRole("role1"));
 
-        Assert.assertTrue(subject.isPermitted("menu:10"));
+//        Assert.assertTrue(subject.isPermitted("menu:10"));
 
         //判断用户权限
 //        Assert.assertTrue(subject.isPermitted("+user+1"));

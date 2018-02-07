@@ -22,7 +22,7 @@ public class JdbcTemplateUtils {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/shiro");
         dataSource.setUsername("shiro");
-        dataSource.setPassword("xinhui123");
+        dataSource.setPassword("123456");
         dataSource.setMaxActive(10);
         return new JdbcTemplate(dataSource);
     }

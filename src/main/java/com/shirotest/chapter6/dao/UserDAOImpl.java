@@ -115,6 +115,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Set<String> findPermissions(String username) {
-        return null;
+        String sql = "select permission from sys_users u, sys_roles r, sys_permissions p, sys_users_roles ur, sys_roles_permissions rp where u.username=? and u.id=ur.user_id and r.id=ur.role_id and r.id=rp.role_id and p.id=rp.permission_id";
+        return new HashSet(jdbcTemplate.queryForList(sql, String.class, username));
     }
 }
