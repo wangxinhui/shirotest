@@ -1,5 +1,6 @@
-package com.shirotest.chapter6;
+package com.shirotest.chapter6.test;
 
+import com.shirotest.chapter6.JdbcTemplateUtils;
 import com.shirotest.chapter6.entity.Permission;
 import com.shirotest.chapter6.entity.Role;
 import com.shirotest.chapter6.entity.User;

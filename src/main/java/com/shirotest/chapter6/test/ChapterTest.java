@@ -1,12 +1,13 @@
-package com.shirotest.chapter6;
+package com.shirotest.chapter6.test;
 
+import com.shirotest.chapter6.test.BaseTest;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @Author: by Administrator on 2018/1/31.
  */
-public class chapterTest extends BaseTest {
+public class ChapterTest extends BaseTest {
     @Test
     public void test() {
         login("classpath:chapter6/shiro.ini", u3.getUsername() , password);
@@ -35,7 +36,7 @@ public class chapterTest extends BaseTest {
 
     @Test
     public void testHasPermission() {
-        login("classpath:chapter6/shiro.ini", u1.getUsername(), password);
+        login("classpath:chapter6/shiro.ini", u1.getUsername(), password+"2");
         Assert.assertTrue(subject().isPermittedAll("user:create", "menu:create"));
     }
 
